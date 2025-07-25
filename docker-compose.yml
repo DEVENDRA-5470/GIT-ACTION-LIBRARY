@@ -6,7 +6,7 @@ services:
     container_name: mysql_library
     restart: always
     environment:
-      MYSQL_DATABASE: library_db          # ✅ Ensure DB exists before Django connects
+      MYSQL_DATABASE: library_db
       MYSQL_ROOT_PASSWORD: root@123
     ports:
       - "3307:3306"
@@ -18,10 +18,12 @@ services:
     container_name: django_library
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
     depends_on:
       - db
+    env_file:
+      - .env            # ✅ LOAD environment variables into container
+    volumes:
+      - .:/app
     command: >
       bash -c "
       python manage.py migrate &&
