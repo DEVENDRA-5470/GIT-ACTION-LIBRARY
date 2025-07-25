@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col   mt-10 md:mt-0">
+    <h2 class="text-gray-900 text-lg font-medium title-font mb-1">Author Profile Update</h2>
+    <hr>
+<form method="post" action="" novalidate  enctype="multipart/form-data">
+    {% csrf_token %}
+  <div class="relative mb-4 mt-2">
+     
+      {{form.author_img}}
+      {{form.author_img.errors}}
+  </div>
+
+  <div class="relative mb-4">
+      
+      <br>
+      {{form.author_name}}
+      {{form.author_name.errors}}
+  </div>
+
+  <div class="relative mb-4">
+     
+      <br>
+      {{form.author_mob}}
+      {{form.author_mob.errors}}
+  </div>
+  <div class="relative mb-4">
+    
+      <br>
+      {{form.author_email}}
+      {{form.author_email.errors}}
+  </div>
+  <div class="relative mb-4">
+      
+      <br>
+      {{form.author_education}}
+      {{form.author_education.errors}}
+  </div>
+  <div class="relative mb-4">
+      
+      <br>
+      {{form.author_books}}
+      {{form.author_books.errors}}
+  </div>
+  <div class="relative mb-4">
+      
+      <br>
+      {{form.author_about}}
+      {{form.author_about.errors}}
+  </div>
+
+
+  <button type="submit" class="text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Save Profile</button>
+  <p class="text-xs text-gray-500 mt-3">Literally you probably haven't heard of them jean shorts.</p>
+</div> 
+</form>
+</div>
+{% endblock content %}

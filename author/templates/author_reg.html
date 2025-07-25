@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+      <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+        <h1 class=" font-bold text-3xl text-gray-900">I ,am Author</h1>
+        <br>
+        <h1 class="title-font font-medium text-3xl text-gray-900">Slow-carb next level shoindcgoitch ethical <br> authentic, poko scenester</h1>
+        <p class="leading-relaxed mt-4">Poke slow-carb mixtape knausgaard, typewriter <br> street art gentrify hammock starladder roathse. Craies vegan tousled etsy austin.</p>
+      </div>
+
+      
+     
+        <form class="shadow-2xl p-8 border border-gray-400" method="post" action="" novalidate>
+          <h1 class="text-orange-800 font-medium">Author Registration</h1>
+          <hr>
+          {% csrf_token %}
+        <div class="relative mb-4 mt-2">
+            {{form.username.label_tag}}
+            <br>
+            {{form.username}}
+            {{form.username.errors}}
+        </div>
+
+        <div class="relative mb-4">
+            {{form.first_name.label_tag}}
+            <br>
+            {{form.first_name}}
+            {{form.first_name.errors}}
+        </div>
+
+        <div class="relative mb-4">
+            {{form.email.label_tag}}
+            <br>
+            {{form.email}}
+            {{form.email.errors}}
+        </div>
+        <div class="relative mb-4">
+            {{form.password1.label_tag}}
+            <br>
+            {{form.password1}}
+            {{form.password1.errors}}
+        </div>
+        <div class="relative mb-4">
+            {{form.password2.label_tag}}
+            <br>
+            {{form.password2}}
+            {{form.password2.errors}}
+        </div>
+
+
+        <button type="submit" class="text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg">Register Now</button>
+        <a href="{% url 'user_login' %}">
+          <button type="button" class="inline-flex cursor-pointer text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg ml-4">Login</button>
+        </a>
+        <p class="text-xs text-gray-500 mt-3">Literally you probably haven't heard of them jean shorts.</p>
+      </div> 
+    </form>
+    </div>
+  </section>
+{% endblock content %}

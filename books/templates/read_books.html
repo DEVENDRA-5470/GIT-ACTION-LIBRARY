@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="shadow-xl m-4 p-6 bg-white rounded-lg border border-gray-200">
+    <p class="text-lg font-semibold text-gray-800">{{ books.book_id }}</p>
+    <p class="text-xl font-bold text-blue-600">{{ books.book_title }}</p>
+    <p class="text-sm text-gray-600 mt-2">{{ books.book_content }}</p>
+    <p class="text-xs text-gray-500 mt-2">Published on: {{ books.book_published_at }}</p>
+    <p class="text-xs text-gray-500 mt-1">Last updated on: {{ books.book_updated_at }}</p>
+    <b>Price : {{books.book_price}} </b> <strike>1000 Rs</strike>
+    <br>
+
+    {% if perms.books.delete_all_books %}
+    <a href="{% url 'update_books' books.id %}">
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Update Book
+        </button>
+    </a>
+    <a href="{% url 'delete_books' books.id %}">
+        <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Delete Book
+        </button>
+    </a>
+    {% endif %}
+
+    <a href="{% url 'rented_books' books.id %}">
+        <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+           Rent Book
+        </button>
+    </a>
+</div>
+
+
+
+{% endblock content %}
