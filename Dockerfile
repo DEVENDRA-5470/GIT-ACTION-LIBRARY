@@ -22,4 +22,5 @@ COPY . .
 
 
 # Run migrations and start the app
-CMD ["sh", "-c", "python manage.py migrate && gunicorn Library_Management.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["gunicorn", "Library_Management.wsgi:application", "--bind", "0.0.0.0:8000"]
+
