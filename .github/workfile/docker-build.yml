@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-test-push-run:
-    runs-on: self-hosted  # ✅ use self-hosted runner
+    runs-on: self-hosted  # ✅ Make sure your runner is connected and running
 
     steps:
       - name: ⬇️ Checkout Code
@@ -33,15 +33,10 @@ jobs:
             -t devnotfound404/library-app:latest \
             . --push
 
-      - name: 🧹 Stop old container if running
-        run: |
-          docker rm -f library-app-container || true
 
-      - name: 🐳 Run Docker Container from Image
+      
+      - name: 🚀 Deploy Locally with deploy.sh (Optional)
+        if: runner.name == 'self-hosted'
         run: |
-          docker pull devnotfound404/library-app:latest
-          docker run -d \
-            --env-file .env \
-            -p 8000:8000 \
-            --name library-app-container \
-            devnotfound404/library-app:latest
+          chmod +x deploy.sh
+          ./deploy.sh
