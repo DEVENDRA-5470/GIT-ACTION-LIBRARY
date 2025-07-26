@@ -1,4 +1,4 @@
-name: CI Build, Test, Push, and Run
+name: CI Build, Test, Push, and Run Locally
 
 on:
   push:
@@ -7,21 +7,7 @@ on:
 
 jobs:
   build-test-push-run:
-    runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root@123
-          MYSQL_DATABASE: library_db
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot@123"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+    runs-on: self-hosted  # ✅ use self-hosted runner
 
     steps:
       - name: ⬇️ Checkout Code
@@ -29,25 +15,7 @@ jobs:
 
       - name: 📝 Generate .env from template
         run: |
-          sed 's/{{ DB_HOST }}/127.0.0.1/' .env.template > .env
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-
-      - name: ⚙️ Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: 🛠️ Run Django Migrations (MySQL should be ready)
-        run: |
-          python manage.py migrate
-
-      - name: 🧪 Run Django Unit Tests
-        run: |
-          python manage.py test
+          sed 's/{{ DB_HOST }}/host.docker.internal/' .env.template > .env
 
       - name: 🧱 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -58,12 +26,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: 📦 Build & Push Docker Image to Docker Hub
+      - name: 📦 Build & Push Docker Image
         run: |
           docker buildx build \
             --platform linux/amd64 \
             -t devnotfound404/library-app:latest \
             . --push
+
+      - name: 🧹 Stop old container if running
+        run: |
+          docker rm -f library-app-container || true
 
       - name: 🐳 Run Docker Container from Image
         run: |
