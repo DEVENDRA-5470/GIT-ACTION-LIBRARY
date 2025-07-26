@@ -6,8 +6,8 @@ services:
     container_name: mysql_library
     restart: always
     environment:
-      MYSQL_DATABASE: library_db
-      MYSQL_ROOT_PASSWORD: root@123
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
@@ -16,12 +16,13 @@ services:
   web:
     build: .
     container_name: django_library
+    restart: always
     ports:
       - "8000:8000"
     depends_on:
       - db
     env_file:
-      - .env            # ✅ LOAD environment variables into container
+      - .env
     volumes:
       - .:/app
     command: >
