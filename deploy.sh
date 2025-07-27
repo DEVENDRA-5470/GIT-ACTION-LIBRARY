@@ -44,23 +44,19 @@ echo "⏱️ Total deployment time: ${elapsed} seconds"
 
 # Auto-open in browser
 echo "🌐 Opening app in browser..."
-sleep 5
+sleep 3
 
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
+    echo "🪟 Detected WSL — using powershell.exe..."
     powershell.exe /C "start $APP_URL"
 elif command -v xdg-open >/dev/null; then
-    xdg-open "$APP_URL" 2>/dev/null
+    echo "🐧 Detected Linux — using xdg-open..."
+    xdg-open "$APP_URL" 2>/dev/null || echo "❌ xdg-open failed. Open manually: $APP_URL"
 elif command -v open >/dev/null; then
-    open "$APP_URL" 2>/dev/null
+    echo "🍏 Detected macOS — using open..."
+    open "$APP_URL" 2>/dev/null || echo "❌ open failed. Open manually: $APP_URL"
 else
-    echo "📦 'xdg-open' not found. Installing..."
-    sudo apt-get update -qq && sudo apt-get install -y -qq xdg-utils
-
-    if command -v xdg-open >/dev/null; then
-        xdg-open "$APP_URL" 2>/dev/null
-    else
-        echo "❌ Failed to install xdg-open. Open manually: $APP_URL"
-    fi
+    echo "❌ No known browser launcher found. Please open manually: $APP_URL"
 fi
 
 echo "✅ Deployment complete!"
