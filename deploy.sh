@@ -59,4 +59,4 @@ else
     echo "❌ No known browser launcher found. Please open manually: $APP_URL"
 fi
 
-echo "✅ Deployment complete!"
+echo "✅ Deployment complete"
