@@ -1,0 +1,29 @@
+name: 🚀 EC2 Auto Deploy
+
+on:
+  push:
+    branches:
+      - main  # or your deployment branch
+
+jobs:
+  deploy:
+    name: 🔄 Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: ✅ Checkout code
+      uses: actions/checkout@v3
+
+    - name: 🔐 Setup SSH key
+      run: |
+        echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+        chmod 600 ec2_key.pem
+
+    - name: 🚀 Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+          cd ~/GIT-ACTION-LIBRARY &&
+          git pull origin main &&
+          chmod +x deploy.sh &&
+          ./deploy.sh
+        '
