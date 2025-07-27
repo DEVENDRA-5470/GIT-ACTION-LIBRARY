@@ -3,7 +3,7 @@ name: 🚀 EC2 Auto Deploy
 on:
   push:
     branches:
-      - main  # or your deployment branch
+      - main  # Trigger on push to main branch
 
 jobs:
   deploy:
@@ -21,9 +21,12 @@ jobs:
 
     - name: 🚀 Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+        ssh -v -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
           cd ~/GIT-ACTION-LIBRARY &&
           git pull origin main &&
           chmod +x deploy.sh &&
           ./deploy.sh
         '
+
+    - name: 🧹 Clean up private key
+      run: rm -f ec2_key.pem
