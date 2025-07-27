@@ -3,6 +3,9 @@
 start_time=$(date +%s)
 set -e
 
+echo "📁 Ensuring 'static/' directory exists..."
+mkdir -p static
+
 echo "🔄 Stopping existing containers..."
 docker-compose down
 
