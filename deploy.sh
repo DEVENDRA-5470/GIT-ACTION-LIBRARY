@@ -38,15 +38,29 @@ end_time=$(date +%s)
 elapsed=$((end_time - start_time))
 
 PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
-echo "🌐 Your app should be live at: http://$PUBLIC_IP"
+APP_URL="http://$PUBLIC_IP"
+echo "🌐 Your app should be live at: $APP_URL"
 echo "⏱️ Total deployment time: ${elapsed} seconds"
 
-if command -v xdg-open >/dev/null; then
-    xdg-open "http://$PUBLIC_IP"
+# Auto-open in browser
+echo "🌐 Opening app in browser..."
+sleep 5
+
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null; then
+    powershell.exe /C "start $APP_URL"
+elif command -v xdg-open >/dev/null; then
+    xdg-open "$APP_URL" 2>/dev/null
 elif command -v open >/dev/null; then
-    open "http://$PUBLIC_IP"
+    open "$APP_URL" 2>/dev/null
 else
-    echo "🔗 Open in your browser: http://$PUBLIC_IP"
+    echo "📦 'xdg-open' not found. Installing..."
+    sudo apt-get update -qq && sudo apt-get install -y -qq xdg-utils
+
+    if command -v xdg-open >/dev/null; then
+        xdg-open "$APP_URL" 2>/dev/null
+    else
+        echo "❌ Failed to install xdg-open. Open manually: $APP_URL"
+    fi
 fi
 
 echo "✅ Deployment complete!"
