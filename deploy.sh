@@ -1,40 +1,43 @@
 #!/bin/bash
 
-set -e  # Exit if any command fails
-START_TIME=$(date +%s)
+start_time=$(date +%s)
+set -e
 
-echo "🔄 Stopping running containers..."
+echo "🔄 Stopping existing containers..."
 docker-compose down
 
-echo "🔧 Building Docker images..."
+echo "🔧 Building images..."
 docker-compose build
 
-echo "🆙 Starting containers (detached)..."
+echo "🚀 Starting containers..."
 docker-compose up -d
 
-echo "🛠️ Running Django migrations..."
+echo "⏳ Waiting for MySQL to be ready..."
+until docker-compose exec web mysqladmin ping -h"db" --silent; do
+    printf "."
+    sleep 5
+done
+echo "✅ MySQL is ready!"
+
+echo "🛠️ Applying migrations..."
 docker-compose exec web python manage.py migrate --noinput
 
 echo "🎯 Collecting static files..."
 docker-compose exec web python manage.py collectstatic --noinput
 
-# Get public IP of the server
+end_time=$(date +%s)
+elapsed=$((end_time - start_time))
+
 PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
 echo "🌐 Your app should be live at: http://$PUBLIC_IP"
+echo "⏱️ Total deployment time: ${elapsed} seconds"
 
-# Optional: Auto open in browser based on OS
 if command -v xdg-open >/dev/null; then
-    echo "🌍 Opening in browser..."
     xdg-open "http://$PUBLIC_IP"
 elif command -v open >/dev/null; then
-    echo "🌍 Opening in browser..."
     open "http://$PUBLIC_IP"
 else
-    echo "🖐️ Please manually open: http://$PUBLIC_IP"
+    echo "🔗 Open in your browser: http://$PUBLIC_IP"
 fi
-
-END_TIME=$(date +%s)
-ELAPSED_TIME=$((END_TIME - START_TIME))
-echo "⏱️ Total deployment time: ${ELAPSED_TIME} seconds"
 
 echo "✅ Deployment complete!"
