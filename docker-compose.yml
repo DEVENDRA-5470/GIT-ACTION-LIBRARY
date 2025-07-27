@@ -35,7 +35,7 @@ services:
     image: nginx:latest
     container_name: nginx_library
     ports:
-       - "8080:80"
+       - "80:80"
     depends_on:
       - web
     volumes:
