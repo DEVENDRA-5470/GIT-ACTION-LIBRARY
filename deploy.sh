@@ -16,7 +16,7 @@ echo "🚀 Starting containers..."
 docker-compose up -d
 
 echo "⏳ Waiting for MySQL to be ready..."
-until docker-compose exec db mysqladmin ping -h"127.0.0.1" -uroot -proot --silent; do
+until docker-compose exec -T db mysqladmin ping -h"127.0.0.1" -uroot -proot --silent; do
     printf "."
     sleep 5
 done
@@ -25,10 +25,10 @@ echo -e "\n✅ MySQL is ready!"
 echo "🔍 Checking if web container is running..."
 if docker-compose ps web | grep -q "Up"; then
     echo "🛠️ Applying migrations..."
-    docker-compose exec web python manage.py migrate --noinput
+    docker-compose exec -T web python manage.py migrate --noinput
 
     echo "🎯 Collecting static files..."
-    docker-compose exec web python manage.py collectstatic --noinput
+    docker-compose exec -T web python manage.py collectstatic --noinput
 else
     echo "❌ Web container is not running. Check logs with: docker-compose logs web"
     exit 1
