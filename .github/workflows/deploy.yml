@@ -28,5 +28,5 @@ jobs:
           ./deploy.sh
         '
 
-    - name: 🧹 Clean up private key
+    - name: 🧹 Clean up private
       run: rm -f ec2_key.pem
