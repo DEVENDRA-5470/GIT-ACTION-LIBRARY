@@ -7,30 +7,30 @@ echo "📁 Ensuring 'static/' directory exists..."
 mkdir -p static
 
 echo "🔄 Stopping existing containers..."
-docker-compose down
+sudo docker-compose down
 
 echo "🔧 Building images..."
-docker-compose build
+sudo docker-compose build
 
 echo "🚀 Starting containers..."
-docker-compose up -d
+sudo docker-compose up -d
 
 echo "⏳ Waiting for MySQL to be ready..."
-until docker-compose exec -T db mysqladmin ping -h"127.0.0.1" -uroot -proot --silent; do
+until sudo docker-compose exec -T db mysqladmin ping -h"127.0.0.1" -uroot -proot --silent; do
     printf "."
     sleep 5
 done
 echo -e "\n✅ MySQL is ready!"
 
 echo "🔍 Checking if web container is running..."
-if docker-compose ps web | grep -q "Up"; then
+if sudo docker-compose ps web | grep -q "Up"; then
     echo "🛠️ Applying migrations..."
-    docker-compose exec -T web python manage.py migrate --noinput
+    sudo docker-compose exec -T web python manage.py migrate --noinput
 
     echo "🎯 Collecting static files..."
-    docker-compose exec -T web python manage.py collectstatic --noinput
+    sudo docker-compose exec -T web python manage.py collectstatic --noinput
 else
-    echo "❌ Web container is not running. Check logs with: docker-compose logs web"
+    echo "❌ Web container is not running. Check logs with: sudo docker-compose logs web"
     exit 1
 fi
 
